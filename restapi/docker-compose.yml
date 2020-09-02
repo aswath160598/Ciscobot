@@ -1,0 +1,29 @@
+version: '2.1'
+services:
+    app:
+        build: ./app
+        # image: 'redis:5.0.5'
+        links:
+            - db
+        ports:
+            - "8080:5000"
+        networks:
+            - akamai
+
+    db:
+        image: mysql:5.7
+        ports:
+            - "33000:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: password123
+        volumes:
+            - ./db:/docker-entrypoint-initdb.d/:ro
+        networks:
+            - akamai
+networks:
+    akamai:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.59.0.0/16
